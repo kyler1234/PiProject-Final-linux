@@ -3,6 +3,11 @@
 print("Hello World!")
 
 #open a game window
+import sys, pygame
+pygame.init()
+
+size = width, height = 500, 500
+window = pygame.display.set_mode(size)
     #show main menu screen
         #option to play
         #option for how to play
