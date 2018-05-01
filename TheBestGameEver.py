@@ -4,10 +4,40 @@ print("Hello World!")
 
 #open a game window
 import sys, pygame
-pygame.init()
 
-size = width, height = 500, 500
-window = pygame.display.set_mode(size)
+def main():
+	pygame.init()
+
+	size = width, height = 500, 500
+	window = pygame.display.set_mode(size)
+	pygame.display.set_caption('Best Snake Game')
+
+	done = False
+	color = (225, 255, 255)
+	x = 30
+	y = 30
+
+	clock = pygame.time.Clock()
+
+	while not done:
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				done = True
+
+		pressed = pygame.key.get_pressed()
+		if pressed[pygame.K_UP]: y -= 3
+		if pressed[pygame.K_DOWN]: y += 3
+		if pressed[pygame.K_LEFT]: x -= 3
+		if pressed[pygame.K_RIGHT]: x += 3
+
+		window.fill((0, 0, 0))
+		pygame.draw.rect(window, color, pygame.Rect(x, y, 60, 60))
+
+		pygame.display.flip()
+		clock.tick(60)
+
+if __name__ == '__main__':
+	main()
     #show main menu screen
         #option to play
         #option for how to play
