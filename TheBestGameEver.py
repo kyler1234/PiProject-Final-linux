@@ -37,7 +37,6 @@ print("Hello World!")
 import sys, pygame
 from pygame import *	#needed to reference keys directly instead of pygame.K_xxxx
 
-
 #directional constants
 DIRECTION_UP = 0
 DIRECTION_DOWN = 1
@@ -49,13 +48,14 @@ KEY_DIRECTION = {
     K_w: DIRECTION_UP,    K_UP:    DIRECTION_UP,   
     K_s: DIRECTION_DOWN,  K_DOWN:  DIRECTION_DOWN, 
     K_a: DIRECTION_LEFT,  K_LEFT:  DIRECTION_LEFT, 
-	K_d: DIRECTION_RIGHT, K_RIGHT: DIRECTION_RIGHT,
+    K_d: DIRECTION_RIGHT, K_RIGHT: DIRECTION_RIGHT,
 }
 
-#color constants
+#color constants in RGB
 SNAKE_HEAD_COLOR = (250, 50, 50)
 SNAKE_BODY_COLOR = (250, 250, 250)
 APPLE_COLOR = (50, 250, 50)
+BACKGROUND_COLOR = (0, 0, 0)
 
 #grid size constant
 GRID = (50, 50) # X, Y
@@ -64,7 +64,7 @@ GRID = (50, 50) # X, Y
 SNAKE_SPEED_INITIAL = 4.0       # Initial snake speed
 SNAKE_SPEED_INCREMENT = 0.25    # Snake speeds up this much each time it grows
 SNAKE_START_LENGTH = 4          # Initial snake length in segments
-SNAKE_START_LOC = (250, 250)    # Initial snake location
+SNAKE_START_LOC = (25, 25)    # Initial snake location
 
 #snake class
 #init with a starting point as a tupple and length in number of grid squares
@@ -141,12 +141,16 @@ class Food:
 		self.foods = []
 		self.snake = snake
 
+	def reset(self):
+		self.foods = []
+		self.spawn()
+
 	#method to spawn food at random location
 	def spawn(self):
-		self.location = __randomLocation__()
+		self.location = __randomLocation()
 		#check if it spawns on snake, else relocate
 		while self.location == (bit for bit in snake):
-			self.location = (__randomLocation__())
+			self.location = (__randomLocation())
 		self.food.append(self.location)
 		return self.foods
 
@@ -163,10 +167,59 @@ class Food:
 		return self.foods
 
 	#private method for food spawns
-	def __randomLocation__(self):
+	def __randomLocation(self):
 		randX = random.randint(0,GRID[0])
 		randY = random.randint(0,GRID[1])
 		return (randX, randY)
+
+class Game:
+	def __init__(self, window, screen, clock, font):
+		self.window = window
+		self.screen = screen
+		self.clock = clock
+		self.font = font
+
+		self.fps = STARTING_FPS
+		self.ticks = 0
+		self.playing = False
+		self.main_menu = True
+		self.score = 0
+		self.world = Rect((0,0), GRID)
+
+		self.nextDirection = DIRECTION_UP
+		self.snake = Snake(SNAKE_START_LOC, SNAKE_START_LENGTH)
+		self.food = Food(snake)
+
+	def play(self):
+		pass
+
+	def draw():
+		self.screen.fill(BACKGROUND_COLOR)
+		
+
+	def reset(self):
+		self.snake.reset()
+		self.food.reset()
+
+	def input(self, events):
+		#movement
+		if events.key in KEY_DIRECTION:
+			self.nextDirection = KEY_DIRECTION[e.key]
+		elif e.key == K_ESCAPE and not self.playing:
+			#go to main menu code here
+			pass
+
+	def update(self):
+		self.snake.changeDirection(self.nextDirection)
+		self.snake.update()
+
+		if food.is_eaten():
+			self.snake.add_bit()
+			#score code
+		if self.snake.check_collision() or  self.world.collidepoint(self.snake.getHead()):
+			self.playing = False
+			#game over screen
+
 
 
 def main():
