@@ -33,18 +33,23 @@
     #display top scores
     #ask user to play again
 
+print("Hello World!")
+import sys, pygame
+from pygame import *	#needed to reference keys directly instead of pygame.K_xxxx
+
+
 #directional constants
 DIRECTION_UP = 0
 DIRECTION_DOWN = 1
 DIRECTION_LEFT = 2
 DIRECTION_RIGHT = 3
 
-#look up table for keys and directions
+#look up table for keys and directions, we can add joystic movement as well
 KEY_DIRECTION = {
     K_w: DIRECTION_UP,    K_UP:    DIRECTION_UP,   
     K_s: DIRECTION_DOWN,  K_DOWN:  DIRECTION_DOWN, 
     K_a: DIRECTION_LEFT,  K_LEFT:  DIRECTION_LEFT, 
-K_d: DIRECTION_RIGHT, K_RIGHT: DIRECTION_RIGHT,
+	K_d: DIRECTION_RIGHT, K_RIGHT: DIRECTION_RIGHT,
 }
 
 #color constants
@@ -84,7 +89,7 @@ class Snake:
             self.direction == 1 and direction == 0 or
             self.direction == 2 and direction == 3 or
             self.direction == 3 and direction == 2):
-        self.direction = direction
+        	self.direction = direction
 
     # Returns the head of the snake
     def getHead(self):
@@ -94,26 +99,32 @@ class Snake:
     def getTail(self):
         return self.snakeBits[len(self.snakeBits) - 1]
 
+    #return the entire snake
+    def getSnake(self):
+    	return self.snakeBits
+
+    #move the snake by 1 block in a direction
     def move_snake(self):
         head = self.getHead();
         newHead = ()
 
-        if self.direction = 0: newHead = (head[0], head[1] + 1)
-        if self.direction = 1: newHead = (head[0], head[1] - 1)
-        if self.direction = 2: newHead = (head[0] + 1, head[1])
-        if self.direction = 3: newHead = (head[0] - 1, head[1])
+        if self.direction == 0: newHead = (head[0], head[1] + 1)
+        if self.direction == 1: newHead = (head[0], head[1] - 1)
+        if self.direction == 2: newHead = (head[0] + 1, head[1])
+        if self.direction == 3: newHead = (head[0] - 1, head[1])
 
         self.snakeBits.pop()
         self.snakeBits.insert(0, newHead)
 
+    #add bits to the end of the snake
     def add_bit(self):
         tail = self.getTail();
         bit = ()
 
-        if self.direction = 0: bit = (tail[0], tail[1] + 1)
-        if self.direction = 1: bit = (tail[0], tail[1] - 1)
-        if self.direction = 2: bit = (tail[0] + 1, tail[1])
-        if self.direction = 3: bit = (tail[0] - 1, tail[1])
+        if self.direction == 0: bit = (tail[0], tail[1] + 1)
+        if self.direction == 1: bit = (tail[0], tail[1] - 1)
+        if self.direction == 2: bit = (tail[0] + 1, tail[1])
+        if self.direction == 3: bit = (tail[0] - 1, tail[1])
 
         self.snakeBits.append(bit)
 
@@ -124,9 +135,39 @@ class Snake:
         else:
             return False
 
+class Food:
+	def __init__(self, snake):
+		self.location = (0,0)
+		self.foods = []
+		self.snake = snake
 
-print("Hello World!")
-import sys, pygame
+	#method to spawn food at random location
+	def spawn(self):
+		self.location = __randomLocation__()
+		#check if it spawns on snake, else relocate
+		while self.location == (bit for bit in snake):
+			self.location = (__randomLocation__())
+		self.food.append(self.location)
+		return self.foods
+
+	#check if any of the foods is eaten if so remove from foods
+	def is_eaten(self):
+		if (food for food in self.foods) == snake.getHead():
+			self.foods.pop(index(food))
+			return True
+		else:
+			return False
+
+	#returns all foods alive
+	def get_foods(self):
+		return self.foods
+
+	#private method for food spawns
+	def __randomLocation__(self):
+		randX = random.randint(0,GRID[0])
+		randY = random.randint(0,GRID[1])
+		return (randX, randY)
+
 
 def main():
 	pygame.init()
